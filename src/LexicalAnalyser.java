@@ -6,8 +6,8 @@ import java.util.List;
 
 public class LexicalAnalyser {
 
-	public static void main(String args[]) throws FileNotFoundException, IOException {
-		try(BufferedReader br = new BufferedReader(new FileReader("file.txt"))) {
+	public static void main(String args[]) throws FileNotFoundException, IOException, LexicalException {
+		try(BufferedReader br = new BufferedReader(new FileReader("src/tester.txt"))) {
 		    StringBuilder sb = new StringBuilder();
 		    String line = br.readLine();
 
@@ -16,13 +16,14 @@ public class LexicalAnalyser {
 		        sb.append(System.lineSeparator());
 		        line = br.readLine();
 		    }
-		    String everything = sb.toString();
+		    String code = sb.toString();
+		    analyse(code);
 		}
 	}
 	
 	public static List<Token> analyse(String sourceCode) throws LexicalException {
 
-		System.out.println("This is a test");
+		System.out.println(sourceCode);
 		return null;
 	}
 
