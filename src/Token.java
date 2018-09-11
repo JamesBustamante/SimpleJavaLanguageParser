@@ -1,5 +1,7 @@
 import java.util.Optional;
 
+
+
 public class Token {
 
 	public enum TokenType {
@@ -10,6 +12,11 @@ public class Token {
 
 	private TokenType type;
 	private String value;
+	
+	public Token() {
+		this.type = TokenType.NONE;
+		this.value = null;
+	}
 
 	public Token(TokenType type) {
 		this.type = type;
