@@ -2,6 +2,7 @@ public class HelloWorld {
    public static void main(String[] args) {
       System.out.println("Hello, World");
       int myNumber = 65;
+      char mychar = 'm';
       while (myNumber >= 44) {
       	myNumber = myNumber - 1;
       }
