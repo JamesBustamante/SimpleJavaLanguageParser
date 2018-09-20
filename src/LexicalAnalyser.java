@@ -8,7 +8,7 @@ import java.util.regex.*;
 
 public class LexicalAnalyser {
 
-	public static void main(String args[]) throws FileNotFoundException, IOException, LexicalException {
+	public static void main(String args[]) throws FileNotFoundException, IOException, LexicalException, SyntaxException {
 		try(BufferedReader br = new BufferedReader(new FileReader("src/tester.txt"))) {
 		    StringBuilder sb = new StringBuilder();
 		    String line = br.readLine();
@@ -19,7 +19,8 @@ public class LexicalAnalyser {
 		        line = br.readLine();
 		    }
 		    String code = sb.toString();
-		    analyse(code);
+		    List<Token> tokens = analyse(code);
+		    SyntacticAnalyser.parse(tokens);
 		}
 	}
 	
@@ -144,7 +145,7 @@ public class LexicalAnalyser {
         
         
         
-		return null;
+		return tokens;
 	}
 
 }

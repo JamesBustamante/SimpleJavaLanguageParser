@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,12 +15,18 @@ public class ParseTree<T> {
 		private Label label;
 		private T token;
 		private TreeNode parent;
-		private List<TreeNode> children;
+		private List<TreeNode> children = new ArrayList<TreeNode>();
 
 		public TreeNode(Label label, TreeNode parent) {
 			this.label = label;
 			this.token = null;
 			this.parent = parent;
+		}
+		
+		public TreeNode(Label label) {
+			this.label = label;
+			this.token = null;
+			this.parent = null;
 		}
 
 		public TreeNode(Label label, T token, TreeNode parent) {
@@ -49,6 +56,14 @@ public class ParseTree<T> {
 			return this.label;
 		}
 
+		@Override
+		public String toString() {
+			return "TreeNode [label=" + label + ", token=" + token + ", parent=" + parent + ", children=" + children.size()
+					+ "]";
+		}
+		
+		
+
 	}
 
 	private TreeNode root;
@@ -68,4 +83,11 @@ public class ParseTree<T> {
 	public void setRoot(TreeNode root) {
 		this.root = root;
 	}
+
+	@Override
+	public String toString() {
+		return "ParseTree [root=" + root + ", toString()=" + "]";
+	}
+	
+	
 }
