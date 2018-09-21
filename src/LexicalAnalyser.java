@@ -122,7 +122,7 @@ public class LexicalAnalyser {
             			tokens.add(new Token(Token.TokenType.FALSE,words[i]));
         		 else if (words[i].matches("^\\w{1}$"))
         			 tokens.add(new Token(Token.TokenType.CHARLIT,words[i]));
-        		 else if (words[i].matches("^[_a-z]\\w*$"))
+        		 else if (words[i].matches("^[_a-z]\\w*$")) //Regular Expression Fix here
           			tokens.add(new Token(Token.TokenType.ID,words[i]));
         		 
         	}

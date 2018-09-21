@@ -17,7 +17,7 @@ public class ParseTree<T> {
 		private TreeNode parent;
 		private List<TreeNode> children = new ArrayList<TreeNode>();
 
-		public TreeNode(Label label, TreeNode parent) {
+		public TreeNode(Label label, TreeNode parent) { //
 			this.label = label;
 			this.token = null;
 			this.parent = parent;
