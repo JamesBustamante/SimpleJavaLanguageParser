@@ -97,8 +97,8 @@ public class LexicalAnalyser {
         		 else if (words[i].equals("String")|| words[i].equals("int")||words[i].equals("boolean")|| words[i].equals("char"))
         			 tokens.add(new Token(Token.TokenType.TYPE,words[i]));
         		 else if (words[i].equals("System") && words[i+1].equals(".") && 
-        				 words[i+2].equals("out") && words[i+3].equals(".") && words[i+4].equals("println")) {
-          			tokens.add(new Token(Token.TokenType.PRINT,"System.out.println"));
+        				 words[i+2].equals("out") && words[i+3].equals(".") && words[i+4].equals("print")) {
+          			tokens.add(new Token(Token.TokenType.PRINT,"System.out.print"));
           			i = i + 4;
         		 }
         		 else if (words[i].equals("while"))

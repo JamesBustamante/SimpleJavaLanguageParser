@@ -33,6 +33,10 @@ public class Token {
 			return Optional.<String>empty();
 		return Optional.<String>of(value);
 	}
+	
+	public String getStringValue() {
+		return this.value;
+	}
 
 	public TokenType getType() {
 		return this.type;
