@@ -42,8 +42,8 @@ public class LexicalAnalyser {
         		 System.out.println(words[i]);
         		 if (words[i].equals("public")) //.Matches uses regex
         			tokens.add(new Token(Token.TokenType.PUBLIC,"public"));
-        		 else if (words[i].equals("+"))
-         			tokens.add(new Token(Token.TokenType.PLUS,"+"));
+        		 else if (words[i].equals("*"))
+         			tokens.add(new Token(Token.TokenType.TIMES,"*"));
         		 else if (words[i].equals("+"))
         			tokens.add(new Token(Token.TokenType.PLUS,"+"));
         		 else if (words[i].equals("-"))

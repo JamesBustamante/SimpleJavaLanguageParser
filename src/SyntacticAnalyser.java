@@ -211,7 +211,7 @@ public class SyntacticAnalyser {
 		} else {throw new SyntaxException("Syntax Exception");}
 		i++;
 		
-		if (tokens.get(i).getValue().get().matches(";|while|for|if|system\\.out\\.print|\\(|int|boolean|char")) { //FIXED
+		if (tokens.get(i).getStringValue().matches(";|while|for|if|system\\.out\\.print|\\(|int|boolean|char")) { //FIXED
 			nodes.add(parseTree.new TreeNode(ParseTree.Label.los, tokens.get(i), whileParent));
 			whileParent.addChild(nodes.get(nodes.size()-1));
 			losNT(tokens);
@@ -283,7 +283,7 @@ public class SyntacticAnalyser {
 			possAssignParent.addChild(nodes.get(nodes.size()-1));
 			i++;
 			System.out.println(tokens.get(i).getStringValue());
-			if (tokens.get(i).getValue().get().matches("true|false|\\(") || tokens.get(i).getType().equals(Token.TokenType.NUM) || tokens.get(i).getType().equals(Token.TokenType.ID)) {
+			if (tokens.get(i).getStringValue().matches("true|false|\\(") || tokens.get(i).getType().equals(Token.TokenType.NUM) || tokens.get(i).getType().equals(Token.TokenType.ID)) {
 				nodes.add(parseTree.new TreeNode(ParseTree.Label.possassign, tokens.get(i), possAssignParent));
 				possAssignParent.addChild(nodes.get(nodes.size()-1));
 				exprNT(tokens);
@@ -347,7 +347,7 @@ public class SyntacticAnalyser {
 	public static void exprNT(List<Token> tokens) throws SyntaxException {
 		/// Next part to complete
 		ParseTree<Token>.TreeNode exprParent = nodes.get(nodes.size() - 1);
-		if (tokens.get(i).getValue().get().matches("true|false|\\(")) {
+		if (tokens.get(i).getStringValue().matches("true|false|\\(")) {
 			nodes.add(parseTree.new TreeNode(ParseTree.Label.expr, exprParent));
 			exprParent.addChild(nodes.get(nodes.size()-1));
 			boolExprNT(tokens);
@@ -400,8 +400,23 @@ public class SyntacticAnalyser {
 
 	}
 	
-	public static void arithExprPrimeNT(List<Token> tokens) {
-
+	public static void arithExprPrimeNT(List<Token> tokens) throws SyntaxException {
+		ParseTree<Token>.TreeNode arithExprPrimeParent = nodes.get(nodes.size() - 1);
+		if (tokens.get(i).getType().equals(Token.TokenType.PLUS)) {
+			nodes.add(parseTree.new TreeNode(ParseTree.Label.arithexprprime,tokens.get(i), arithExprPrimeParent));
+			arithExprPrimeParent.addChild(nodes.get(nodes.size()-1));
+			factorNT(tokens);
+			i++;
+			termPrimeNT(tokens);
+		} else if (tokens.get(i).getType().equals(Token.TokenType.DIVIDE)) { 
+			nodes.add(parseTree.new TreeNode(ParseTree.Label.factor, arithExprPrimeParent));
+			arithExprPrimeParent.addChild(nodes.get(nodes.size()-1));
+			factorNT(tokens);
+			i++;
+			termPrimeNT(tokens);
+		} 
+		else {throw new SyntaxException("Syntax Exception");}
+		i++;
 	}
 	
 	public static void termNT(List<Token> tokens) throws SyntaxException {
@@ -412,24 +427,88 @@ public class SyntacticAnalyser {
 			factorNT(tokens);
 		} else {throw new SyntaxException("Syntax Exception");}
 		
-		if (tokens.get(i).getValue().get().matches("\\(|[*]|[/]|[%]") || tokens.get(i).getValue().get().matches("[+]|[-]|[)]|[;]|[<]|[<>]=?|=|\\!\\=|\\&\\&|\\|")) { //Follow
+		if (tokens.get(i).getStringValue().matches("\\(|[*]|[/]|[%]") || tokens.get(i).getStringValue().matches("[+]|[-]|[)]|[;]|[<]|[<>]=?|=|\\!\\=|\\&\\&|\\|")) { //Follow
 			nodes.add(parseTree.new TreeNode(ParseTree.Label.termprime, tokens.get(i), termParent));
 			termParent.addChild(nodes.get(nodes.size()-1));
 			termPrimeNT(tokens);
 		} else {throw new SyntaxException("Syntax Exception");}
 	}
 	
-	public static void termPrimeNT(List<Token> tokens) {
-		
+	public static void termPrimeNT(List<Token> tokens) throws SyntaxException {
+		ParseTree<Token>.TreeNode termPrimeParent = nodes.get(nodes.size() - 1);
+		if (tokens.get(i).getType().equals(Token.TokenType.TIMES)) {
+			nodes.add(parseTree.new TreeNode(ParseTree.Label.factor, termPrimeParent));
+			termPrimeParent.addChild(nodes.get(nodes.size()-1));
+			factorNT(tokens);
+			i++;
+			termPrimeNT(tokens);
+		} else if (tokens.get(i).getType().equals(Token.TokenType.DIVIDE)) { 
+			nodes.add(parseTree.new TreeNode(ParseTree.Label.factor, termPrimeParent));
+			termPrimeParent.addChild(nodes.get(nodes.size()-1));
+			factorNT(tokens);
+			i++;
+			termPrimeNT(tokens);
+		} else if (tokens.get(i).getType().equals(Token.TokenType.MOD)) {
+			nodes.add(parseTree.new TreeNode(ParseTree.Label.factor, termPrimeParent)); //char Expr
+			termPrimeParent.addChild(nodes.get(nodes.size()-1));
+			factorNT(tokens);
+			i++;
+			termPrimeNT(tokens);
+		} else if (tokens.get(i).getStringValue().matches("[+]|[-]|[)]|[;]|[<]|[<>]=?|=|\\!\\=|\\&\\&|\\|")) {
+			nodes.add(parseTree.new TreeNode(ParseTree.Label.epsilon, termPrimeParent)); //char Expr
+			termPrimeParent.addChild(nodes.get(nodes.size()-1));
+		} 
+		else {throw new SyntaxException("Syntax Exception");}
+		i++;
 	}
 	
-	public static void factorNT(List<Token> tokens) {
-
+	public static void factorNT(List<Token> tokens) throws SyntaxException {
+		ParseTree<Token>.TreeNode factorParent = nodes.get(nodes.size() - 1);
+		if (tokens.get(i).getType().equals(Token.TokenType.LPAREN)) {
+			nodes.add(parseTree.new TreeNode(ParseTree.Label.factor,tokens.get(i), factorParent));
+			factorParent.addChild(nodes.get(nodes.size()-1));
+			arithExprNT(tokens);
+			i++;
+			if (tokens.get(i).getType().equals(Token.TokenType.RPAREN)) {
+				nodes.add(parseTree.new TreeNode(ParseTree.Label.factor,tokens.get(i), factorParent));
+				factorParent.addChild(nodes.get(nodes.size()-1));
+				i++;
+			}
+		} else if (tokens.get(i).getType().equals(Token.TokenType.ID)) { 
+			nodes.add(parseTree.new TreeNode(ParseTree.Label.ID, factorParent));
+			factorParent.addChild(nodes.get(nodes.size()-1));
+			idNT(tokens);
+			i++;
+		} else if (tokens.get(i).getType().equals(Token.TokenType.NUM)) {
+			nodes.add(parseTree.new TreeNode(ParseTree.Label.num, factorParent)); //char Expr
+			factorParent.addChild(nodes.get(nodes.size()-1));
+			numNT(tokens);
+			i++;
+		} 
+		else {throw new SyntaxException("Syntax Exception");}
 	}
 	
-	public static void printExprNT(List<Token> tokens) {
-
+	public static void printExprNT(List<Token> tokens) throws SyntaxException {
+		ParseTree<Token>.TreeNode printExprParent = nodes.get(nodes.size() - 1);
+		if (tokens.get(i).getStringValue().matches("true|false|\\(") || tokens.get(i).getType().equals(Token.TokenType.NUM) || tokens.get(i).getType().equals(Token.TokenType.ID)) {
+			nodes.add(parseTree.new TreeNode(ParseTree.Label.boolexpr, printExprParent));
+			printExprParent.addChild(nodes.get(nodes.size()-1));
+			boolExprNT(tokens);
+		} else if (tokens.get(i).getType().equals(Token.TokenType.DQUOTE)) { 
+			nodes.add(parseTree.new TreeNode(ParseTree.Label.stringlit, printExprParent));
+			printExprParent.addChild(nodes.get(nodes.size()-1));
+			i++;
+			stringLitNT(tokens);
+			i++;
+			if (tokens.get(i).getType().equals(Token.TokenType.DQUOTE)) { 
+				nodes.add(parseTree.new TreeNode(ParseTree.Label.stringlit, printExprParent));
+				printExprParent.addChild(nodes.get(nodes.size()-1));
+			} else {throw new SyntaxException("Syntax Exception");}
+		} 
+		else {throw new SyntaxException("Syntax Exception");}
+		i++;
 	}
+	
 	
 	public static void idNT(List<Token> tokens) {
 		nodes.add(parseTree.new TreeNode(ParseTree.Label.ID,tokens.get(i), nodes.get(nodes.size()-1)));
@@ -437,6 +516,11 @@ public class SyntacticAnalyser {
 	}
 	
 	public static void stringLitNT(List<Token> tokens) {
+		nodes.add(parseTree.new TreeNode(ParseTree.Label.ID,tokens.get(i), nodes.get(nodes.size()-1)));
+		nodes.get(nodes.size()-2).addChild(nodes.get(nodes.size()-1));
+	}
+	
+	public static void numNT(List<Token> tokens) {
 		nodes.add(parseTree.new TreeNode(ParseTree.Label.ID,tokens.get(i), nodes.get(nodes.size()-1)));
 		nodes.get(nodes.size()-2).addChild(nodes.get(nodes.size()-1));
 	}
