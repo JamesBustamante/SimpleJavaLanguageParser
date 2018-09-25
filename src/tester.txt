@@ -1,10 +1,5 @@
 public class helloWorld {
    public static void main(String[] args) {
-      System.out.print("Hello, World");
-      int myNumber = 65;
-      char mychar = 'm';
-      while (myNumber >= 44) {
-      	myNumber = myNumber - 1;
+      int mynumber = 23;
       }
    }
-}

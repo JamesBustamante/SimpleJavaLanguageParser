@@ -107,7 +107,7 @@ public class SyntacticAnalyser {
 			root.addChild(nodes.get(nodes.size()-1));
 			losNT(tokens);
 		} else {throw new SyntaxException("Syntax Exception");}
-		i++;
+
 		if (tokens.get(i).getType().equals(Token.TokenType.RBRACE)) {
 			nodes.add(parseTree.new TreeNode(ParseTree.Label.prog, tokens.get(i), root));
 			root.addChild(nodes.get(nodes.size()-1));
@@ -123,7 +123,7 @@ public class SyntacticAnalyser {
 		ParseTree<Token>.TreeNode losParent = nodes.get(nodes.size()-1); //Parent: LOS
 		//Matches the first of los
 		//Not epsilon
-		System.out.println(tokens.get(i).getStringValue());
+		System.out.println(tokens.get(i).getStringValue()); //Next token string
 		if (tokens.get(i).getStringValue().matches(";|while|for|if|System\\.out\\.print|[(]|int|boolean|char") || tokens.get(i).getType().equals(Token.TokenType.ID)) {
 			nodes.add(parseTree.new TreeNode(ParseTree.Label.stat, losParent));
 			losParent.addChild(nodes.get(nodes.size()-1));
@@ -160,6 +160,8 @@ public class SyntacticAnalyser {
 			nodes.add(parseTree.new TreeNode(ParseTree.Label.decl, statParent));
 			statParent.addChild(nodes.get(nodes.size()-1));
 			declNT(tokens);
+			nodes.add(parseTree.new TreeNode(ParseTree.Label.stat,tokens.get(i), statParent));
+			statParent.addChild(nodes.get(nodes.size()-1));
 		} else if (tokens.get(i).getType().equals(Token.TokenType.PRINT)) {
 			nodes.add(parseTree.new TreeNode(ParseTree.Label.print, statParent));
 			statParent.addChild(nodes.get(nodes.size()-1));
@@ -280,6 +282,7 @@ public class SyntacticAnalyser {
 			nodes.add(parseTree.new TreeNode(ParseTree.Label.possassign,tokens.get(i), possAssignParent));
 			possAssignParent.addChild(nodes.get(nodes.size()-1));
 			i++;
+			System.out.println(tokens.get(i).getStringValue());
 			if (tokens.get(i).getValue().get().matches("true|false|\\(") || tokens.get(i).getType().equals(Token.TokenType.NUM) || tokens.get(i).getType().equals(Token.TokenType.ID)) {
 				nodes.add(parseTree.new TreeNode(ParseTree.Label.possassign, tokens.get(i), possAssignParent));
 				possAssignParent.addChild(nodes.get(nodes.size()-1));
@@ -362,7 +365,7 @@ public class SyntacticAnalyser {
 	}
 
 	public static void boolExprNT(List<Token> tokens) {
-
+		
 	}
 	
 	public static void boolExprPrimeNT(List<Token> tokens) {
@@ -401,12 +404,23 @@ public class SyntacticAnalyser {
 
 	}
 	
-	public static void termNT(List<Token> tokens) {
-
+	public static void termNT(List<Token> tokens) throws SyntaxException {
+		ParseTree<Token>.TreeNode termParent = nodes.get(nodes.size() - 1);
+		if (tokens.get(i).getValue().get().matches("\\(") || tokens.get(i).getType().equals(Token.TokenType.NUM) || tokens.get(i).getType().equals(Token.TokenType.ID)) {
+			nodes.add(parseTree.new TreeNode(ParseTree.Label.factor, tokens.get(i), termParent));
+			termParent.addChild(nodes.get(nodes.size()-1));
+			factorNT(tokens);
+		} else {throw new SyntaxException("Syntax Exception");}
+		
+		if (tokens.get(i).getValue().get().matches("\\(|[*]|[/]|[%]") || tokens.get(i).getValue().get().matches("[+]|[-]|[)]|[;]|[<]|[<>]=?|=|\\!\\=|\\&\\&|\\|")) { //Follow
+			nodes.add(parseTree.new TreeNode(ParseTree.Label.termprime, tokens.get(i), termParent));
+			termParent.addChild(nodes.get(nodes.size()-1));
+			termPrimeNT(tokens);
+		} else {throw new SyntaxException("Syntax Exception");}
 	}
 	
 	public static void termPrimeNT(List<Token> tokens) {
-
+		
 	}
 	
 	public static void factorNT(List<Token> tokens) {
