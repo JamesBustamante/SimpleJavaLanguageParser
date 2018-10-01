@@ -332,16 +332,164 @@ public class SyntacticAnalyser {
 		else {throw new SyntaxException("Syntax Exception"); }
 	}
 	
-	public static void ifNT(List<Token> tokens) {
-
+	public static void ifNT(List<Token> tokens) throws SyntaxException { ////
+		ParseTree<Token>.TreeNode ifParent = nodes.get(nodes.size() - 1);
+		if (tokens.get(i).getType().equals(Token.TokenType.IF)) {
+			nodes.add(parseTree.new TreeNode(ParseTree.Label.ifstat,tokens.get(i), ifParent));
+			ifParent.addChild(nodes.get(nodes.size()-1));
+		} else {throw new SyntaxException("Syntax Exception");}
+		i++;
+		
+		if (tokens.get(i).getType().equals(Token.TokenType.LPAREN)) {
+			nodes.add(parseTree.new TreeNode(ParseTree.Label.ifstat,tokens.get(i), ifParent));
+			ifParent.addChild(nodes.get(nodes.size()-1));
+		} else {throw new SyntaxException("Syntax Exception");}
+		i++;
+		
+		if (tokens.get(i).getType().equals(Token.TokenType.ID) || tokens.get(i).getType().equals(Token.TokenType.NUM) || tokens.get(i).getValue().get().matches("true|false|\\(")) {
+			nodes.add(parseTree.new TreeNode(ParseTree.Label.boolexpr, ifParent));
+			ifParent.addChild(nodes.get(nodes.size()-1));
+			boolExprNT(tokens);
+		} else {throw new SyntaxException("Syntax Exception");}
+		i++;
+		
+		if (tokens.get(i).getType().equals(Token.TokenType.RPAREN)) {
+			nodes.add(parseTree.new TreeNode(ParseTree.Label.ifstat,tokens.get(i), ifParent));
+			ifParent.addChild(nodes.get(nodes.size()-1));
+		} else {throw new SyntaxException("Syntax Exception");}
+		i++;
+		
+		if (tokens.get(i).getType().equals(Token.TokenType.LBRACE)) {
+			nodes.add(parseTree.new TreeNode(ParseTree.Label.ifstat,tokens.get(i), ifParent));
+			ifParent.addChild(nodes.get(nodes.size()-1));
+		} else {throw new SyntaxException("Syntax Exception");}
+		i++;
+		
+		if (tokens.get(i).getStringValue().matches(";|while|for|if|system\\.out\\.print|\\(|int|boolean|char")) { //FIXED
+			nodes.add(parseTree.new TreeNode(ParseTree.Label.los, tokens.get(i), ifParent));
+			ifParent.addChild(nodes.get(nodes.size()-1));
+			losNT(tokens);
+		} else {throw new SyntaxException("Syntax Exception");}
+		i++;
+		
+		if (tokens.get(i).getType().equals(Token.TokenType.RBRACE)) {
+			nodes.add(parseTree.new TreeNode(ParseTree.Label.ifstat,tokens.get(i), ifParent));
+			ifParent.addChild(nodes.get(nodes.size()-1));
+		} else {throw new SyntaxException("Syntax Exception");}
+		i++;
 	}
 	
-	public static void elseIfNT(List<Token> tokens) {
-
+	public static void elseIfNT(List<Token> tokens) throws SyntaxException {
+		ParseTree<Token>.TreeNode elseIfParent = nodes.get(nodes.size() - 1);
+		if (tokens.get(i).getType().equals(Token.TokenType.ELSE) && !tokens.get(i+1).getType().equals(Token.TokenType.IF)) {
+			nodes.add(parseTree.new TreeNode(ParseTree.Label.elseifstat,tokens.get(i), elseIfParent));
+			elseIfParent.addChild(nodes.get(nodes.size()-1));
+			i++;
+			
+			if (tokens.get(i).getType().equals(Token.TokenType.LBRACE)) {
+				nodes.add(parseTree.new TreeNode(ParseTree.Label.elseifstat,tokens.get(i), elseIfParent));
+				elseIfParent.addChild(nodes.get(nodes.size()-1));
+			} else {throw new SyntaxException("Syntax Exception");}
+			i++;
+			
+			if (tokens.get(i).getStringValue().matches(";|while|for|if|system\\.out\\.print|\\(|int|boolean|char")) { //FIXED
+				nodes.add(parseTree.new TreeNode(ParseTree.Label.los, tokens.get(i), elseIfParent));
+				elseIfParent.addChild(nodes.get(nodes.size()-1));
+				losNT(tokens);
+			} else {throw new SyntaxException("Syntax Exception");}
+			i++;
+			
+			if (tokens.get(i).getType().equals(Token.TokenType.RBRACE)) {
+				nodes.add(parseTree.new TreeNode(ParseTree.Label.elseifstat,tokens.get(i), elseIfParent));
+				elseIfParent.addChild(nodes.get(nodes.size()-1));
+			} else {throw new SyntaxException("Syntax Exception");}
+			i++;
+			elseIfNT(tokens);
+		} else if (tokens.get(i).getType().equals(Token.TokenType.ELSE) && tokens.get(i+1).getType().equals(Token.TokenType.IF)) {
+			nodes.add(parseTree.new TreeNode(ParseTree.Label.elseifstat,tokens.get(i), elseIfParent));
+			elseIfParent.addChild(nodes.get(nodes.size()-1));
+			i++;
+			
+			nodes.add(parseTree.new TreeNode(ParseTree.Label.elseifstat,tokens.get(i), elseIfParent));
+			elseIfParent.addChild(nodes.get(nodes.size()-1));
+			i++;
+			
+			if (tokens.get(i).getType().equals(Token.TokenType.LPAREN)) {
+				nodes.add(parseTree.new TreeNode(ParseTree.Label.elseifstat,tokens.get(i), elseIfParent));
+				elseIfParent.addChild(nodes.get(nodes.size()-1));
+				i++;
+			}
+			
+			if (tokens.get(i).getType().equals(Token.TokenType.ID) || tokens.get(i).getType().equals(Token.TokenType.NUM) || tokens.get(i).getValue().get().matches("true|false|\\(")) {
+				nodes.add(parseTree.new TreeNode(ParseTree.Label.boolexpr, elseIfParent));
+				elseIfParent.addChild(nodes.get(nodes.size()-1));
+				boolExprNT(tokens);
+			} else {throw new SyntaxException("Syntax Exception");}
+			i++;
+			
+			if (tokens.get(i).getType().equals(Token.TokenType.RPAREN)) {
+				nodes.add(parseTree.new TreeNode(ParseTree.Label.elseifstat,tokens.get(i), elseIfParent));
+				elseIfParent.addChild(nodes.get(nodes.size()-1));
+				i++;
+			}
+			
+			if (tokens.get(i).getType().equals(Token.TokenType.LBRACE)) {
+				nodes.add(parseTree.new TreeNode(ParseTree.Label.elseifstat,tokens.get(i), elseIfParent));
+				elseIfParent.addChild(nodes.get(nodes.size()-1));
+				i++;
+			}
+			
+			if (tokens.get(i).getStringValue().matches(";|while|for|if|system\\.out\\.print|\\(|int|boolean|char")) { //FIXED
+				nodes.add(parseTree.new TreeNode(ParseTree.Label.los, tokens.get(i), elseIfParent));
+				elseIfParent.addChild(nodes.get(nodes.size()-1));
+				losNT(tokens);
+			} else {throw new SyntaxException("Syntax Exception");}
+			i++;
+			
+			if (tokens.get(i).getType().equals(Token.TokenType.RBRACE)) {
+				nodes.add(parseTree.new TreeNode(ParseTree.Label.elseifstat,tokens.get(i), elseIfParent));
+				elseIfParent.addChild(nodes.get(nodes.size()-1));
+				i++;
+			}
+			
+			if (tokens.get(i).getType().equals(Token.TokenType.RBRACE)) {
+				nodes.add(parseTree.new TreeNode(ParseTree.Label.elseifstat,tokens.get(i), elseIfParent));
+				elseIfParent.addChild(nodes.get(nodes.size()-1));
+				i++;
+			}
+			
+		} else if (tokens.get(i).getStringValue().matches(";|while|for|if|system\\.out\\.print|\\(|int|boolean|char")) { //FIXED
+			nodes.add(parseTree.new TreeNode(ParseTree.Label.epsilon, tokens.get(i), elseIfParent));
+			elseIfParent.addChild(nodes.get(nodes.size()-1));
+			i--;
+		}
+		else {throw new SyntaxException("Syntax Exception");}
+		i++;
+		
+		
 	}
 	
-	public static void assignNT(List<Token> tokens) {
-
+	public static void assignNT(List<Token> tokens) throws SyntaxException {
+		ParseTree<Token>.TreeNode assignParent = nodes.get(nodes.size() - 1);
+		if (tokens.get(i).getType().equals(Token.TokenType.ID)) {
+			nodes.add(parseTree.new TreeNode(ParseTree.Label.ID, assignParent));
+			assignParent.addChild(nodes.get(nodes.size()-1));
+			idNT(tokens);
+		} else {throw new SyntaxException("Syntax Exception");}
+		i++;
+		
+		if (tokens.get(i).getType().equals(Token.TokenType.EQUAL)) {
+			nodes.add(parseTree.new TreeNode(ParseTree.Label.assign,tokens.get(i), root));
+			root.addChild(nodes.get(nodes.size()-1));
+		} else {throw new SyntaxException("Syntax Exception");}
+		i++;
+		
+		if (tokens.get(i).getValue().get().matches("\\(|[']|true|false") || tokens.get(i).getType().equals(Token.TokenType.NUM) || tokens.get(i).getType().equals(Token.TokenType.ID)) {
+			nodes.add(parseTree.new TreeNode(ParseTree.Label.term, assignParent));
+			assignParent.addChild(nodes.get(nodes.size()-1));
+			termNT(tokens);
+		} else {throw new SyntaxException("Syntax Exception");}
+		i++;
 	}
 	
 	public static void declNT(List<Token> tokens) throws SyntaxException {
