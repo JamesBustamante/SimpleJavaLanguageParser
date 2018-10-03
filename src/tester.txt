@@ -1,5 +1,11 @@
 public class helloWorld {
    public static void main(String[] args) {
       int mynumber = 23;
+      boolean mybool = false;
+      char myChar = 'b';
+      System.out.print("Big String");
+      if (mybool == true) {
+      	System.out.print("In the If Statement");
+      	}
       }
    }
