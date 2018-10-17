@@ -7,6 +7,8 @@ public class SyntacticAnalyser {
 	static ParseTree<Token>.TreeNode root = parseTree.new TreeNode(ParseTree.Label.prog); // Store A single Node (with parse tree)
 	static List<ParseTree<Token>.TreeNode> nodes = new ArrayList<ParseTree<Token>.TreeNode>(); // Store An Array List of Nodes 
 	
+	static ParseTree<Token>.TreeNode LOS = parseTree.new TreeNode(ParseTree.Label.los, root);
+	
 	public static ParseTree<Token> parse(List<Token> tokens) throws SyntaxException {
 		//ParseTree<Token> parseTree = new ParseTree<Token>();
 		// ParseTree<Token> parseTree = new ParseTree();
@@ -19,6 +21,17 @@ public class SyntacticAnalyser {
 		// ParseTree<Token>.TreeNode allows for the creation of nodes that link to the
 		// tree (ParseTree)
 		parseTree.setRoot(root); // Root of the node1
+//		root.addChild(LOS);
+//		LOS.addChild(parseTree.new TreeNode(ParseTree.Label.los, root));
+//		LOS.addChild(parseTree.new TreeNode(ParseTree.Label.los, root));
+//		ParseTree<Token>.TreeNode node2 = parseTree.new TreeNode(ParseTree.Label.prog, tokens.get(0), LOS);
+//		LOS.addChild(node2);
+//		node2.addChild(parseTree.new TreeNode(ParseTree.Label.arithexprprime));
+//		node2.addChild(parseTree.new TreeNode(ParseTree.Label.boolconst));
+//		node2.addChild(parseTree.new TreeNode(ParseTree.Label.boolconst));
+//		node2.addChild(parseTree.new TreeNode(ParseTree.Label.boolconst));
+//		System.out.println(LOS.getChildren() + " Test");
+//		System.out.println(parseTree.getRoot().getChildren() + " Test");
 		
 		ParseTree<Token>.TreeNode node1 = parseTree.new TreeNode(ParseTree.Label.prog, tokens.get(0), root);
 		// We set the root of the node
@@ -31,7 +44,8 @@ public class SyntacticAnalyser {
 		
 		i = 0;
 		progNT(tokens);
-		System.out.println(parseTree + " Test");
+		System.out.println(parseTree.getRoot().getChildren() + " Test");
+		//System.out.println(nodes.get(nodes.size()-4).getParent());
 		return parseTree;
 		// We Return parseTree as it contains all of the nodes of the tree
 	}
@@ -104,9 +118,19 @@ public class SyntacticAnalyser {
 		} else {throw new SyntaxException("Syntax Exception");}
 		i++;
 		if (!(tokens.get(i).getType().equals(Token.TokenType.RBRACE))) { //Enter los
-			nodes.add(parseTree.new TreeNode(ParseTree.Label.los, root));
+			//LOS.addChild(child);
+//			ParseTree<Token>.TreeNode single = parseTree.new TreeNode(ParseTree.Label.booleq, root);
+//			nodes.add(single);
+//			root.addChild(single);
+//			single.addChild(parseTree.new TreeNode(ParseTree.Label.boolop, root));
+			nodes.add(parseTree.new TreeNode(ParseTree.Label.prog, root));
 			root.addChild(nodes.get(nodes.size()-1));
+
+//			nodes.get(nodes.size()-1).addChild(parseTree.new TreeNode(ParseTree.Label.booleq, tokens.get(i), root));
+//			nodes.get(nodes.size()-1).addChild(parseTree.new TreeNode(ParseTree.Label.booleq, tokens.get(i), root));
+//			System.out.println(parseTree.getRoot().getChildren() + "  rr");
 			losNT(tokens);
+			System.out.println(nodes.get(nodes.size()-1).getParent() + "=======================");
 		} else {throw new SyntaxException("Syntax Exception");}
 
 		if (tokens.get(i).getType().equals(Token.TokenType.RBRACE)) {
@@ -131,6 +155,8 @@ public class SyntacticAnalyser {
 			losParent.addChild(nodes.get(nodes.size()-1));
 			statNT(tokens);
 			System.out.println("NEXT " + tokens.get(i));
+			nodes.add(parseTree.new TreeNode(ParseTree.Label.prog, root));
+			losParent.addChild(nodes.get(nodes.size()-1));
 			losNT(tokens);
 		} else if (tokens.get(i).getType().equals(Token.TokenType.RBRACE)){ //Checks for epsilon using follow of los
 			System.out.println("NEXT e" + tokens.get(i));
@@ -141,6 +167,7 @@ public class SyntacticAnalyser {
 
 	public static void statNT(List<Token> tokens) throws SyntaxException {
 		ParseTree<Token>.TreeNode statParent = nodes.get(nodes.size() - 1);
+		System.out.println(nodes.get(nodes.size()-1).getParent().getParent() + "=======================g");
 		if (tokens.get(i).getType().equals(Token.TokenType.WHILE)) {
 			nodes.add(parseTree.new TreeNode(ParseTree.Label.whilestat, statParent));
 			statParent.addChild(nodes.get(nodes.size()-1));
@@ -179,7 +206,8 @@ public class SyntacticAnalyser {
 		} else {
 			throw new SyntaxException("Syntax Exception");
 		}
-
+		System.out.println(statParent.getChildren() + "+++++++++++++++++++");
+		System.out.println(nodes.get(nodes.size()-1).getParent().getParent().getChildren() + "=======================h");
 	}
 	
 	public static void whileNT(List<Token> tokens) throws SyntaxException {
@@ -587,8 +615,8 @@ public class SyntacticAnalyser {
 		i++;
 		
 		if (tokens.get(i).getType().equals(Token.TokenType.ASSIGN)) {
-			nodes.add(parseTree.new TreeNode(ParseTree.Label.assign,tokens.get(i), root));
-			root.addChild(nodes.get(nodes.size()-1));
+			nodes.add(parseTree.new TreeNode(ParseTree.Label.assign,tokens.get(i), assignParent));
+			assignParent.addChild(nodes.get(nodes.size()-1));
 		} else {throw new SyntaxException("Syntax Exception");}
 		i++;
 		System.out.println(tokens.get(i) + "496");
