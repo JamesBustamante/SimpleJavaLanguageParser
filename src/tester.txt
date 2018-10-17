@@ -1,19 +1,21 @@
-public class helloWorld {
+public class GelloWorld {
    public static void main(String[] args) {
-      int mynumber = 23;
-		boolean mybool = false;
-char myChar = 'b';
-System.out.print("Big String");
-if (mybooll > 6) {
-System.out.print("In the If Statement");
-}
-while (true) {
-mynumber = 24;
-}
-int mynumber = 23;
-for (int i = 0 ; i < 6 ; i + 1) {
-thisis = false;
-}
-		
-      }
+	int mynumber = 23;
+	boolean mybool = false;
+	char myChar = 'b';
+	thisisbool = 34;
+	System.out.print("Big String");
+	if (mybooll > 6) {
+		System.out.print("In the If Statement");
+	} else if (mybooll < 6) {
+		mybooll = mybooll + 1;
+	}
+	while (true) {
+		mynumber = 24;
+	}
+	int mynumber = 23;
+	for (int i = 0 ; i < 6 ; i + 1) {
+		thisis = false;
+	}	
+    }
    }

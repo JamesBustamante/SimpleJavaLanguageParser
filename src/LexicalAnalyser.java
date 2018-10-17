@@ -36,97 +36,174 @@ public class LexicalAnalyser {
 		//Next is to match each word to a token.
         int i = 0;
         boolean isInQuotes = false; 
+        boolean assigned = false;
         //System.out.println(words[1]);
         while (i < words.length) { //This while loop goes through each string in the array and matches to a token type
         	if (!(words[i].trim().isEmpty())) {
         		 System.out.println(words[i]);
-        		 if (words[i].equals("public")) //.Matches uses regex
-        			tokens.add(new Token(Token.TokenType.PUBLIC,"public"));
-        		 else if (words[i].equals("*"))
-         			tokens.add(new Token(Token.TokenType.TIMES,"*"));
-        		 else if (words[i].equals("+"))
-        			tokens.add(new Token(Token.TokenType.PLUS,"+"));
-        		 else if (words[i].equals("-"))
-         			tokens.add(new Token(Token.TokenType.MINUS,"-"));
-        		 else if (words[i].equals("/"))
-         			tokens.add(new Token(Token.TokenType.DIVIDE,"/"));
-        		 else if (words[i].equals("%"))
-          			tokens.add(new Token(Token.TokenType.MOD,"%"));
-        		 else if (words[i].equals("="))
-           			tokens.add(new Token(Token.TokenType.ASSIGN,"="));
-        		 else if (words[i].equals("=="))
-           			tokens.add(new Token(Token.TokenType.EQUAL,"=="));
-        		 else if (words[i].equals("!="))
-           			tokens.add(new Token(Token.TokenType.NEQUAL,"!="));
-        		 else if (words[i].equals("<"))
-           			tokens.add(new Token(Token.TokenType.LT,"<"));
-        		 else if (words[i].equals("<="))
-           			tokens.add(new Token(Token.TokenType.LE,"<="));
-        		 else if (words[i].equals(">"))
-           			tokens.add(new Token(Token.TokenType.GT,">"));
-        		 else if (words[i].equals(">="))
-           			tokens.add(new Token(Token.TokenType.GE,">="));
-        		 else if (words[i].equals("("))
-           			tokens.add(new Token(Token.TokenType.LPAREN,"("));
-        		 else if (words[i].equals(")"))
-            			tokens.add(new Token(Token.TokenType.RPAREN,")"));
-        		 else if (words[i].equals("{"))
-            			tokens.add(new Token(Token.TokenType.LBRACE,"{"));
-        		 else if (words[i].equals("}"))
-            			tokens.add(new Token(Token.TokenType.RBRACE,"}"));
-        		 else if (words[i].equals("&&"))
-            			tokens.add(new Token(Token.TokenType.AND,"AND"));
-        		 else if (words[i].equals("||"))
-            			tokens.add(new Token(Token.TokenType.OR,"||"));
-        		 else if (words[i].equals(";"))
-            			tokens.add(new Token(Token.TokenType.SEMICOLON,";"));
-        		 else if (words[i].equals("class"))
-            			tokens.add(new Token(Token.TokenType.CLASS,"class"));
-        		 else if (words[i].equals("static"))
-            			tokens.add(new Token(Token.TokenType.STATIC,"static"));
-        		 else if (words[i].equals("void"))
-            			tokens.add(new Token(Token.TokenType.VOID,"void"));
-        		 else if (words[i].equals("main"))
-            			tokens.add(new Token(Token.TokenType.MAIN,"main"));
-        		 else if (words[i].equals("String") && words[i+1].equals("[]")) {
-            			tokens.add(new Token(Token.TokenType.STRINGARR,"String[]"));
-            			i++;
-        		 }
-        		 else if (words[i].equals("args"))
-         			tokens.add(new Token(Token.TokenType.ARGS,"args"));
-        		 else if (words[i].equals("String")|| words[i].equals("int")||words[i].equals("boolean")|| words[i].equals("char"))
-        			 tokens.add(new Token(Token.TokenType.TYPE,words[i]));
-        		 else if (words[i].equals("System") && words[i+1].equals(".") && 
-        				 words[i+2].equals("out") && words[i+3].equals(".") && words[i+4].equals("print")) {
-          			tokens.add(new Token(Token.TokenType.PRINT,"System.out.print"));
-          			i = i + 4;
-        		 }
-        		 else if (words[i].equals("while"))
-          			tokens.add(new Token(Token.TokenType.WHILE,"while"));
-        		 else if (words[i].equals("for"))
-          			tokens.add(new Token(Token.TokenType.FOR,"for"));
-        		 else if (words[i].equals("if"))
-          			tokens.add(new Token(Token.TokenType.IF,"if"));
-        		 else if (words[i].equals("else"))
-          			tokens.add(new Token(Token.TokenType.ELSE,"else"));
-        		 else if (words[i].equals("\"")) {
-          			tokens.add(new Token(Token.TokenType.DQUOTE,"\""));
-          			isInQuotes = true; 
-          			i++;
-          			}
-        		 else if (words[i].equals("\'"))
-          			tokens.add(new Token(Token.TokenType.SQUOTE,"\'"));
-        		 else if (words[i].equals("true"))
-            			tokens.add(new Token(Token.TokenType.TRUE,words[i]));
-        		 else if (words[i].equals("false"))
-            			tokens.add(new Token(Token.TokenType.FALSE,words[i]));
-        		 else if (words[i].matches("^[0-9]*"))
-         			tokens.add(new Token(Token.TokenType.NUM,words[i]));
-        		 else if (words[i].matches("^\\w{1}$") && words[i+1].equals("\'"))
-        			 tokens.add(new Token(Token.TokenType.CHARLIT,words[i]));
-        		 else if (words[i].matches("^[_a-z]\\w*$") || words[i].matches("[a-z]")) //Regular Expression Fix here
-          			tokens.add(new Token(Token.TokenType.ID,words[i]));
-        		 
+				if (words[i].equals("public")) { // .Matches uses regex
+					tokens.add(new Token(Token.TokenType.PUBLIC, "public"));
+					assigned = true;
+				}
+				else if (words[i].equals("*")) {
+					tokens.add(new Token(Token.TokenType.TIMES, "*"));
+					assigned = true;
+				}
+				else if (words[i].equals("+")) {
+					tokens.add(new Token(Token.TokenType.PLUS, "+"));
+					assigned = true;
+				}
+				else if (words[i].equals("-")) {
+					tokens.add(new Token(Token.TokenType.MINUS, "-"));
+					assigned = true;
+				}
+				else if (words[i].equals("/")) {
+					tokens.add(new Token(Token.TokenType.DIVIDE, "/"));
+					assigned = true;
+				}
+				else if (words[i].equals("%")) {
+					tokens.add(new Token(Token.TokenType.MOD, "%"));
+					assigned = true;
+				}
+				else if (words[i].equals("=")) {
+					tokens.add(new Token(Token.TokenType.ASSIGN, "="));
+					assigned = true;
+				}
+				else if (words[i].equals("==")) {
+					tokens.add(new Token(Token.TokenType.EQUAL, "=="));
+					assigned = true;
+				}
+				else if (words[i].equals("!=")) {
+					tokens.add(new Token(Token.TokenType.NEQUAL, "!="));
+					assigned = true;
+				}
+				else if (words[i].equals("<")) {
+					tokens.add(new Token(Token.TokenType.LT, "<"));
+					assigned = true;
+				}
+				else if (words[i].equals("<=")) {
+					tokens.add(new Token(Token.TokenType.LE, "<="));
+					assigned = true;
+				}
+				else if (words[i].equals(">")) {
+					tokens.add(new Token(Token.TokenType.GT, ">"));
+					assigned = true;
+				}
+				else if (words[i].equals(">=")) {
+					tokens.add(new Token(Token.TokenType.GE, ">="));
+					assigned = true;
+				}
+				else if (words[i].equals("(")) {
+					tokens.add(new Token(Token.TokenType.LPAREN, "("));
+					assigned = true;
+				}
+				else if (words[i].equals(")")) {
+					tokens.add(new Token(Token.TokenType.RPAREN, ")"));
+					assigned = true;
+				}
+				else if (words[i].equals("{")) {
+					tokens.add(new Token(Token.TokenType.LBRACE, "{"));
+					assigned = true;
+				}
+				else if (words[i].equals("}")) {
+					tokens.add(new Token(Token.TokenType.RBRACE, "}"));
+					assigned = true;
+				}
+				else if (words[i].equals("&&")) {
+					tokens.add(new Token(Token.TokenType.AND, "AND"));
+					assigned = true;
+				}
+				else if (words[i].equals("||")) {
+					tokens.add(new Token(Token.TokenType.OR, "||"));
+					assigned = true;
+				}
+				else if (words[i].equals(";")) {
+					tokens.add(new Token(Token.TokenType.SEMICOLON, ";"));
+					assigned = true;
+				}
+				else if (words[i].equals("class")) {
+					tokens.add(new Token(Token.TokenType.CLASS, "class"));
+					assigned = true;
+				}
+				else if (words[i].equals("static")) {
+					tokens.add(new Token(Token.TokenType.STATIC, "static"));
+					assigned = true;
+				}
+				else if (words[i].equals("void")) {
+					tokens.add(new Token(Token.TokenType.VOID, "void"));
+					assigned = true;
+				}
+				else if (words[i].equals("main")) {
+					tokens.add(new Token(Token.TokenType.MAIN, "main"));
+					assigned = true;
+				}
+				else if (words[i].equals("String") && words[i + 1].equals("[]")) {
+					tokens.add(new Token(Token.TokenType.STRINGARR, "String[]"));
+					i++;
+					assigned = true;
+				} else if (words[i].equals("args")) {
+					tokens.add(new Token(Token.TokenType.ARGS, "args"));
+					assigned = true;
+				}
+				else if (words[i].equals("String") || words[i].equals("int") || words[i].equals("boolean")
+						|| words[i].equals("char")) {
+					tokens.add(new Token(Token.TokenType.TYPE, words[i]));
+					assigned = true;
+				}
+				else if (words[i].equals("System") && words[i + 1].equals(".") && words[i + 2].equals("out")
+						&& words[i + 3].equals(".") && words[i + 4].equals("print")) {
+					tokens.add(new Token(Token.TokenType.PRINT, "System.out.print"));
+					i = i + 4;
+					assigned = true;
+				} else if (words[i].equals("while")) {
+					tokens.add(new Token(Token.TokenType.WHILE, "while"));
+					assigned = true;
+				}
+				else if (words[i].equals("for")) {
+					tokens.add(new Token(Token.TokenType.FOR, "for"));
+					assigned = true;
+				}
+				else if (words[i].equals("if")) {
+					tokens.add(new Token(Token.TokenType.IF, "if"));
+					assigned = true;
+				}
+				else if (words[i].equals("else")) {
+					tokens.add(new Token(Token.TokenType.ELSE, "else"));
+					assigned = true;
+				}
+				else if (words[i].equals("\"")) {
+					tokens.add(new Token(Token.TokenType.DQUOTE, "\""));
+					isInQuotes = true;
+					i++;
+					assigned = true;
+				} else if (words[i].equals("\'")) {
+					tokens.add(new Token(Token.TokenType.SQUOTE, "\'"));
+					assigned = true;
+				}
+				else if (words[i].equals("true")) {
+					tokens.add(new Token(Token.TokenType.TRUE, words[i]));
+					assigned = true;
+				}
+				else if (words[i].equals("false")) {
+					tokens.add(new Token(Token.TokenType.FALSE, words[i]));
+					assigned = true;
+				}
+				else if (words[i].matches("^[0-9]*")) {
+					tokens.add(new Token(Token.TokenType.NUM, words[i]));
+					assigned = true;
+				}
+				else if (words[i].matches("^\\w{1}$") && words[i + 1].equals("\'")) {
+					tokens.add(new Token(Token.TokenType.CHARLIT, words[i]));
+					assigned = true;
+				}
+				else if (words[i].matches("[_a-zA-Z][_a-zA-Z0-9]*")) {
+					tokens.add(new Token(Token.TokenType.ID, words[i]));
+					assigned = true;
+				}
+				if (assigned == false) {
+	        		throw new LexicalException ("Lexical Exception, Invalid String");	
+	        	}
+				assigned = false;
         	}
         	if (isInQuotes) {
         		String value = "";
@@ -138,7 +215,11 @@ public class LexicalAnalyser {
         		tokens.add(new Token(Token.TokenType.STRINGLIT,value));
         		tokens.add(new Token(Token.TokenType.DQUOTE,"\""));
         		isInQuotes = false;
+        		assigned = true;
         	}
+        	
+        	
+        	//assigned = false;
         	i++;
 
         }        

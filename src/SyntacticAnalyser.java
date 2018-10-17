@@ -414,51 +414,53 @@ public class SyntacticAnalyser {
 		} else {throw new SyntaxException("Syntax Exception");}
 		i++; //FIX up
 		System.out.println(tokens.get(i) + "382");
+		if (tokens.get(i).getType().equals(Token.TokenType.ELSE) || tokens.get(i).getStringValue().matches(";|while|for|if|System\\.out\\.print|\\(|int|boolean|char")) {
+			nodes.add(parseTree.new TreeNode(ParseTree.Label.elseifstat, ifParent));
+			ifParent.addChild(nodes.get(nodes.size()-1));
+			elseIfNT(tokens);
+		} else {throw new SyntaxException("Syntax Exception");}
 	}
 	
 	public static void elseIfNT(List<Token> tokens) throws SyntaxException {
 		ParseTree<Token>.TreeNode elseIfParent = nodes.get(nodes.size() - 1);
-		if (tokens.get(i).getType().equals(Token.TokenType.IF) || tokens.get(i+1).getType().equals(Token.TokenType.LBRACE)) {	
-			if (tokens.get(i).getType().equals(Token.TokenType.IF) || tokens.get(i+1).getType().equals(Token.TokenType.LBRACE)) {
+		System.out.println(tokens.get(i) + "426");
+		if (tokens.get(i).getType().equals(Token.TokenType.ELSE) && tokens.get(i+1).getType().equals(Token.TokenType.IF)) {	
+			if (tokens.get(i).getType().equals(Token.TokenType.ELSE) || tokens.get(i+1).getType().equals(Token.TokenType.IF)) {
 				nodes.add(parseTree.new TreeNode(ParseTree.Label.elseifstat,tokens.get(i), elseIfParent));
 				elseIfParent.addChild(nodes.get(nodes.size()-1));
 				elseQIfNT(tokens);
-				i++; 
 				} else {throw new SyntaxException("Syntax Exception");}
-			i++;
-			
+
+			System.out.println(tokens.get(i) + "435");
 			if (tokens.get(i).getType().equals(Token.TokenType.LBRACE)) {
 				nodes.add(parseTree.new TreeNode(ParseTree.Label.elseifstat,tokens.get(i), elseIfParent));
 				elseIfParent.addChild(nodes.get(nodes.size()-1));
 			} else {throw new SyntaxException("Syntax Exception");}
 			i++;
-			
-			if (tokens.get(i).getStringValue().matches(";|while|for|if|system\\.out\\.print|\\(|int|boolean|char")) { //FIXED
+			System.out.println(tokens.get(i) + "440");
+			if (tokens.get(i).getStringValue().matches(";|while|for|if|system\\.out\\.print|\\(|int|boolean|char") || tokens.get(i).getType().equals(Token.TokenType.ID)) { //FIXED
 				nodes.add(parseTree.new TreeNode(ParseTree.Label.los, tokens.get(i), elseIfParent));
 				elseIfParent.addChild(nodes.get(nodes.size()-1));
 				losNT(tokens);
 			} else {throw new SyntaxException("Syntax Exception");}
-			i++;
+
 			
 			if (tokens.get(i).getType().equals(Token.TokenType.RBRACE)) {
 				nodes.add(parseTree.new TreeNode(ParseTree.Label.elseifstat,tokens.get(i), elseIfParent));
 				elseIfParent.addChild(nodes.get(nodes.size()-1));
 			} else {throw new SyntaxException("Syntax Exception");}
 			i++;
-			
-			if (tokens.get(i).getType().equals(Token.TokenType.IF) || tokens.get(i+1).getType().equals(Token.TokenType.LBRACE)) {
+			System.out.println(tokens.get(i) + "453");
+			if (tokens.get(i).getType().equals(Token.TokenType.ELSE) || tokens.get(i).getStringValue().matches(";|while|for|if|system\\.out\\.print|\\(|int|boolean|char")) {
 				nodes.add(parseTree.new TreeNode(ParseTree.Label.elseifstat,tokens.get(i), elseIfParent));
 				elseIfParent.addChild(nodes.get(nodes.size()-1));
-				elseQIfNT(tokens);
-				i++; 
+				elseIfNT(tokens);
 				} else {throw new SyntaxException("Syntax Exception");}
-			i++;
 		} else if (tokens.get(i).getStringValue().matches(";|while|for|if|system\\.out\\.print|\\(|int|boolean|char")) { //FIXED
-			nodes.add(parseTree.new TreeNode(ParseTree.Label.los, tokens.get(i), elseIfParent));
+			nodes.add(parseTree.new TreeNode(ParseTree.Label.epsilon, tokens.get(i), elseIfParent));
 			elseIfParent.addChild(nodes.get(nodes.size()-1));
-			losNT(tokens);
 		} else {throw new SyntaxException("Syntax Exception");}
-		i++;
+
 		
 //		///
 //		
@@ -555,18 +557,15 @@ public class SyntacticAnalyser {
 		if (tokens.get(i).getType().equals(Token.TokenType.ELSE)) {
 			nodes.add(parseTree.new TreeNode(ParseTree.Label.elseifstat,tokens.get(i), elseQIfParent));
 			elseQIfParent.addChild(nodes.get(nodes.size()-1));
-			i++; 
 			} else {throw new SyntaxException("Syntax Exception");}
 		i++;
-		
+		System.out.println(tokens.get(i));
 		if (tokens.get(i).getType().equals(Token.TokenType.IF) || tokens.get(i+1).getType().equals(Token.TokenType.LBRACE)) {
 			nodes.add(parseTree.new TreeNode(ParseTree.Label.elseifstat,tokens.get(i), elseQIfParent));
 			elseQIfParent.addChild(nodes.get(nodes.size()-1));
 			possIfNT(tokens);
-			i++; 
 			} else {throw new SyntaxException("Syntax Exception");}
-		i++;
-		
+		System.out.println(tokens.get(i) + "574");
 		
 	}
 	
@@ -601,7 +600,6 @@ public class SyntacticAnalyser {
 			possIfParent.addChild(nodes.get(nodes.size()-1));
 			i++; 
 			} else {throw new SyntaxException("Syntax Exception");}
-		i++;
 	}
 	
 	public static void assignNT(List<Token> tokens) throws SyntaxException {
