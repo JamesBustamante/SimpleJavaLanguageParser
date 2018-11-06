@@ -5,9 +5,9 @@ import java.util.Optional;
 public class ParseTree<T> {
 
 	public enum Label {
-		prog, los, stat, whilestat, forstat, forstart, forarith, ifstat, elseifstat, assign, decl, possassign, print,
-		type, expr, boolexpr, boolexprprime, boolop, booleq, boollog, relexpr, relexprprime, relop, arithexpr,
-		arithexprprime, term, termprime, factor, printexpr, ID, num, charexpr, stringlit, boolconst, epsilon
+		prog, los, stat, whilestat, forstat, forstart, forarith, ifstat, elseifstat, elseorelseif, possif, assign, decl, possassign, print,
+		type, expr, boolexprprime, boolop, booleq, boollog, relexpr, relexprprime, relop, arithexpr,
+		arithexprprime, term, termprime, factor, printexpr, ID, num, charexpr, stringlit, boolconst, epsilon, terminal
 	};
 
 	class TreeNode {

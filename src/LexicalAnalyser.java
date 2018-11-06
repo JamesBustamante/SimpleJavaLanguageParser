@@ -20,6 +20,7 @@ public class LexicalAnalyser {
 		    }
 		    String code = sb.toString();
 		    List<Token> tokens = analyse(code);
+		   
 		    SyntacticAnalyser.parse(tokens);
 		}
 	}
@@ -30,7 +31,7 @@ public class LexicalAnalyser {
 		List<Token> tokens = new ArrayList<Token>();
         Token token = new Token();
         //String value = "";
-        String[] words = sourceCode.split("(\\s+)|(?=\\()|(?=\\))|(?=(\"))|(?=(;))|(?<=\\w)(?=\\W)|(?<=\\W)(?=\\w)|^\\s*$. ");
+        String[] words = sourceCode.split("(?=\\})|(?=\\{)|(\\s+)|(?=\\()|(?=\\))|(?=(\"))|(?=(;))|(?<=\\w)(?=\\W)|(?<=\\W)(?=\\w)|^\\s*$. ");
 //        for (String word : words)
 //        	System.out.println(word);
 		//Next is to match each word to a token.
@@ -196,7 +197,7 @@ public class LexicalAnalyser {
 					tokens.add(new Token(Token.TokenType.CHARLIT, words[i]));
 					assigned = true;
 				}
-				else if (words[i].matches("[_a-zA-Z][_a-zA-Z0-9]*")) {
+				else if (words[i].matches("[a-zA-Z][_a-zA-Z0-9]*")) {
 					tokens.add(new Token(Token.TokenType.ID, words[i]));
 					assigned = true;
 				}
