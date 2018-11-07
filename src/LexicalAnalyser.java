@@ -153,7 +153,7 @@ public class LexicalAnalyser {
 				}
 				else if (words[i].equals("System") && words[i + 1].equals(".") && words[i + 2].equals("out")
 						&& words[i + 3].equals(".") && (words[i + 4].equals("print") || words[i + 4].equals("println"))) {
-					tokens.add(new Token(Token.TokenType.PRINT, "System.out.print"));
+					tokens.add(new Token(Token.TokenType.PRINT, "System.out.println"));
 					i = i + 4;
 					assigned = true;
 				} else if (words[i].equals("while")) {
