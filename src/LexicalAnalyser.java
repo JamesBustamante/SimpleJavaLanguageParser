@@ -32,8 +32,8 @@ public class LexicalAnalyser {
         Token token = new Token();
         //String value = "";
         String[] words = sourceCode.split("(?=\\})|(?=\\{)|(\\s+)|(?=\\()|(?=\\))|(?=(\"))|(?=(;))|(?<=\\w)(?=\\W)|(?<=\\W)(?=\\w)|^\\s*$. ");
-//        for (String word : words)
-//        	System.out.println(word);
+        for (String word : words)
+        	System.out.println(word);
 		//Next is to match each word to a token.
         int i = 0;
         boolean isInQuotes = false; 
@@ -152,7 +152,7 @@ public class LexicalAnalyser {
 					assigned = true;
 				}
 				else if (words[i].equals("System") && words[i + 1].equals(".") && words[i + 2].equals("out")
-						&& words[i + 3].equals(".") && words[i + 4].equals("print")) {
+						&& words[i + 3].equals(".") && (words[i + 4].equals("print") || words[i + 4].equals("println"))) {
 					tokens.add(new Token(Token.TokenType.PRINT, "System.out.print"));
 					i = i + 4;
 					assigned = true;

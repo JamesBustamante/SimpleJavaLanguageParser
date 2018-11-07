@@ -95,7 +95,7 @@ public class SyntacticalAnalysisTests {
 	public void testProgramWithSimplestStatement() throws SyntaxException, LexicalException {
 		ParseTree<Token> result = SyntacticAnalyser.parse(LexicalAnalyser.analyse("public class Test { public static void main(String[] args){ ; }}"));
 		List<ParseTree<Token>.TreeNode> children = result.getRoot().getChildren();
-		System.out.println(children.get(13)+ "//*********************************************");
+		
 		assertEquals(children.get(13).getLabel(), ParseTree.Label.los);
 		assertEquals(children.get(13).getChildren().size(), 2);
 		assertEquals(children.get(13).getChildren().get(0).getLabel(), ParseTree.Label.stat);
@@ -265,7 +265,7 @@ public class SyntacticalAnalysisTests {
 	
 	@Test
 	public void testIfStatement() throws SyntaxException, LexicalException {
-		ParseTree<Token> result = SyntacticAnalyser.parse(LexicalAnalyser.analyse("public class Test { public static void main(String[] args){ if (true) {System.out.println(\"true\");} else { System.out.println(\"false\"); }}"));
+		ParseTree<Token> result = SyntacticAnalyser.parse(LexicalAnalyser.analyse("public class Test { public static void main(String[] args){ if (true) {System.out.println(\"true\");} else { System.out.println(\"false\"); }}}"));
 		ParseTree<Token>.TreeNode ifNode = result.getRoot().getChildren().get(13).getChildren().get(0).getChildren().get(0);
 
 		assertEquals(ParseTree.Label.ifstat, ifNode.getLabel());
@@ -336,13 +336,13 @@ public class SyntacticalAnalysisTests {
 	@Test
 	public void testBrokenWhile1() throws SyntaxException, LexicalException {
 		exception.expect(SyntaxException.class);
-		SyntacticAnalyser.parse(LexicalAnalyser.analyse("public class Test { public static void main(String[] args){ while () { ; } }"));
+		SyntacticAnalyser.parse(LexicalAnalyser.analyse("public class Test { public static void main(String[] args){ while () { ; } } }"));
 	}
 	
 	@Test
 	public void testBrokenWhile2() throws SyntaxException, LexicalException {
 		exception.expect(SyntaxException.class);
-		SyntacticAnalyser.parse(LexicalAnalyser.analyse("public class Test { public static void main(String[] args){ while a || b { ; } }"));
+		SyntacticAnalyser.parse(LexicalAnalyser.analyse("public class Test { public static void main(String[] args){ while a || b { ; } } }"));
 	}
 	
 	@Test
@@ -353,7 +353,7 @@ public class SyntacticalAnalysisTests {
 	
 	@Test
 	public void testFor() throws SyntaxException, LexicalException {
-		ParseTree<Token> result = SyntacticAnalyser.parse(LexicalAnalyser.analyse("public class Test { public static void main(String[] args){ for ( ; 5 ;) {; } }"));
+		ParseTree<Token> result = SyntacticAnalyser.parse(LexicalAnalyser.analyse("public class Test { public static void main(String[] args){ for ( ; 5 ;) {; } } }"));
 
 		ParseTree<Token>.TreeNode forNode = result.getRoot().getChildren().get(13).getChildren().get(0).getChildren().get(0);
 		assertEquals(ParseTree.Label.forstat, forNode.getLabel());
@@ -375,7 +375,7 @@ public class SyntacticalAnalysisTests {
 	@Test
 	public void testBrokenFor() throws SyntaxException, LexicalException {
 		exception.expect(SyntaxException.class);
-		SyntacticAnalyser.parse(LexicalAnalyser.analyse("public class Test { public static void main(String[] args){ for ( ;  ;) {; } }"));
+		SyntacticAnalyser.parse(LexicalAnalyser.analyse("public class Test { public static void main(String[] args){ for ( ;  ;) {; } } }"));
 	}
 
 }
