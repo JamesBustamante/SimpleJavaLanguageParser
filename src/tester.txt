@@ -6,7 +6,7 @@ public class GelloWorld {
 	thisisbool = 34;
 	System.out.print("Big String");
 	if (mybooll > 6) {
-		System.out.print("In the If Statement");
+		System.out.println("In the If Statement");
 	} else if (mybooll < 6) {
 		mybooll = mybooll + 1;
 	}

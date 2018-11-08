@@ -437,7 +437,7 @@ public class SyntacticAnalyser {
 		} else {throw new SyntaxException("Syntax Exception");}
 		i++; //FIX up
 		System.out.println(tokens.get(i) + "382");
-		if (tokens.get(i).getType().equals(Token.TokenType.ELSE) || tokens.get(i).getStringValue().matches(";|while|for|if|System\\.out\\.print|\\(|int|boolean|char")) {
+		if (tokens.get(i).getType().equals(Token.TokenType.ELSE) || tokens.get(i).getStringValue().matches(";|while|for|if|System\\.out\\.println|\\(|int|boolean|char")) {
 			nodes.add(parseTree.new TreeNode(ParseTree.Label.elseifstat, ifParent));
 			ifParent.addChild(nodes.get(nodes.size()-1));
 			elseIfNT(tokens);
