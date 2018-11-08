@@ -12,10 +12,6 @@ public class GelloWorld {
 	}
 	while (true) {
 		mynumber = 24;
-	}
-	int mynumber = 23;
-	for (int i = 0 ; i < 6 ; i + 1) {
-		thisis = false;
-	}	
     }
+   }
    }

@@ -258,7 +258,7 @@ public class SyntacticAnalyser {
 		} else {throw new SyntaxException("Syntax Exception");}
 		i++;
 		System.out.println(tokens.get(i) + "217");
-		if (tokens.get(i).getStringValue().matches(";|while|for|if|system\\.out\\.print|\\(|int|boolean|char") || tokens.get(i).getType().equals(Token.TokenType.ID)) { //FIXED
+		if (tokens.get(i).getStringValue().matches(";|while|for|if|system\\.out\\.println|\\(|int|boolean|char") || tokens.get(i).getType().equals(Token.TokenType.ID)) { //FIXED
 			nodes.add(parseTree.new TreeNode(ParseTree.Label.los, tokens.get(i), whileParent));
 			whileParent.addChild(nodes.get(nodes.size()-1));
 			losNT(tokens);
@@ -401,6 +401,7 @@ public class SyntacticAnalyser {
 		if (tokens.get(i).getType().equals(Token.TokenType.ID) || tokens.get(i).getType().equals(Token.TokenType.NUM) || tokens.get(i).getValue().get().matches("true|false|\\(")) {
 			nodes.add(parseTree.new TreeNode(ParseTree.Label.boolexprprime, ifParent));
 			ifParent.addChild(nodes.get(nodes.size()-1));
+			relExprNT(tokens);
 			if (!tokens.get(i).getType().equals(Token.TokenType.NUM)) {
 				nodes.add(parseTree.new TreeNode(ParseTree.Label.boolexprprime, ifParent));
 				ifParent.addChild(nodes.get(nodes.size()-1));
@@ -480,7 +481,7 @@ public class SyntacticAnalyser {
 				elseIfNT(tokens);
 				} else {throw new SyntaxException("Syntax Exception");}
 			
-		} else if (tokens.get(i).getStringValue().matches(";|while|for|if|system\\.out\\.print|\\(|int|boolean|char")|| tokens.get(i).getType().equals(Token.TokenType.RBRACE)) { //FIXED
+		} else if (tokens.get(i).getStringValue().matches(";|while|for|if|system\\.out\\.println|\\(|int|boolean|char")|| tokens.get(i).getType().equals(Token.TokenType.RBRACE)) { //FIXED
 			nodes.add(parseTree.new TreeNode(ParseTree.Label.epsilon, tokens.get(i), elseIfParent));
 			elseIfParent.addChild(nodes.get(nodes.size()-1));
 			if (tokens.get(i).getType().equals(Token.TokenType.RBRACE)) {i--;}
@@ -781,6 +782,7 @@ public class SyntacticAnalyser {
 
 	public static void boolExprNT(List<Token> tokens) throws SyntaxException { ///HERE NOW
 		ParseTree<Token>.TreeNode boolExprParent = nodes.get(nodes.size() - 1);
+		System.out.println(tokens.get(i) + "624");
 		if (tokens.get(i).getStringValue().matches("true|false|\\(") || tokens.get(i).getType().equals(Token.TokenType.NUM) || tokens.get(i).getType().equals(Token.TokenType.ID)) {
 			nodes.add(parseTree.new TreeNode(ParseTree.Label.epsilon, tokens.get(i),boolExprParent));
 			boolExprParent.addChild(nodes.get(nodes.size()-1));
